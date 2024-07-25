@@ -1,4 +1,5 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,12 +18,14 @@ public class Producto {
     private int stock;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     private float precio;
 
     @OneToMany(mappedBy = "producto")
+    @JsonIgnore
     private List<DetallePedido> detallesPedido;
 
     /*@ManyToMany(mappedBy = "productos")

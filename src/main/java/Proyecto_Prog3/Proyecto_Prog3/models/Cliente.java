@@ -1,5 +1,8 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.*;
@@ -22,9 +25,11 @@ public class Cliente extends Usuario {
     private String direccion;
 
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Carrito carrito;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Pedido> pedidos = new ArrayList<>();
 
     public Cliente(Long id, String nombreUsuario, String contraseña, String nombre, String apellido, String DNI, String mail, String direccion) {

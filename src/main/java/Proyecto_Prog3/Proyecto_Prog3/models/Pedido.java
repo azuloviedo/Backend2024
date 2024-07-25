@@ -1,4 +1,5 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,14 +16,17 @@ public class Pedido {
     private String direccion;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "idEnvio")
     private TipoEnvio envio;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     @OneToMany(mappedBy = "pedido")
+    @JsonIgnore
     private List<DetallePedido> detallesPedido;
 
     public Pedido(Long numPedido, Date fecha, String direccion, TipoEnvio envio, Cliente cliente, List<DetallePedido> detallesPedido) {

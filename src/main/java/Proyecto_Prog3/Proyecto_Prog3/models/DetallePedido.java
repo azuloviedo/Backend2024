@@ -1,4 +1,5 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -9,10 +10,12 @@ public class DetallePedido {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "producto_id")
     private Producto producto;
 

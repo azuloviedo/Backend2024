@@ -1,5 +1,6 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class TipoEnvio {
     private String detalle;
 
     @OneToMany(mappedBy = "envio")
+    @JsonIgnore
     private List<Pedido> pedidos;
 
     // Constructor

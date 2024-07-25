@@ -18,12 +18,13 @@ import java.time.chrono.*;
 public class JwtUtil {
 
     private final String secret = "2b44b0b00fd822d8ce753e54dac3dc4e06c2725f7db930f3b9924468b53194dbccdbe23d7baa5ef5fbc414ca4b2e64700bad60c5a7c45eaba56880985582fba4";
-    //private final Long expiration = 3600l;
+    private final Long expiration = 3600l;
 
     public String generateToken(String username, Long id, String rol) {
         return Jwts.builder()
                 .setSubject(username) // Establece el subject
                 .claim("id", id) //Establece las Claims: información del usuario en el token.
+                .claim("rol", rol)
                 .setIssuedAt(new Date(System.currentTimeMillis())) //Fecha de emisión del token.
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) //Fecha de expiracion del token.
                 .signWith(SignatureAlgorithm.HS256, secret.getBytes()) //Firma el token.
@@ -58,8 +59,16 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    public Long extractId(String token) {
+    /*public Long extractId(String token) {
         return Long.parseLong((String) extractAllClaims(token).get("id"));
+    }*/
+
+    public Long extractId(String token) {
+        return extractAllClaims(token).get("id", Long.class);
+    }
+
+    public String extractRol(String token) {
+        return extractAllClaims(token).get("rol", String.class);
     }
 
     public Date extractExpiration(String token) {

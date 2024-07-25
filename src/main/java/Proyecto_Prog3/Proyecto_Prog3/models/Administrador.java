@@ -62,7 +62,7 @@ public class Administrador extends Usuario {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ALUMNO"));
+        authorities.add(new SimpleGrantedAuthority("Administrador"));
         return authorities;
     }
 

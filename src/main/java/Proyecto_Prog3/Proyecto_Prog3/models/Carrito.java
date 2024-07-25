@@ -1,6 +1,8 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
 import java.util.List;
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +21,7 @@ public class Carrito {
     private Long idCarrito;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 

@@ -1,6 +1,7 @@
 package Proyecto_Prog3.Proyecto_Prog3.models;
 
 import ch.qos.logback.classic.pattern.LineSeparatorConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class Categoria {
     private String nombreCat;
 
     @OneToMany(mappedBy = "categoria")
+    @JsonIgnore
     private List<Producto> productos;
 
     public Categoria(Long idCategoria, String nombreCat) {
