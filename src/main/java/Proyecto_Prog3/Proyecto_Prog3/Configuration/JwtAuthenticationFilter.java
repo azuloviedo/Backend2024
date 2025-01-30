@@ -31,14 +31,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         // Obtiene el Token JWT de la request
+        System.out.println("LA REQUEST ES:");
+        System.out.println(request);
         String token = jwtUtilities.getToken(request);
+        System.out.println(token);
+        System.out.println("AFUERAAAAAA");
         if(token != null && jwtUtilities.validateToken(token)) { //Si existe ese token y es valido
             String username = jwtUtilities.extractUsername(token); //Obtengo el username del token
+            System.out.println(username);
+            System.out.println("ADENTROOO");
+
             UserDetails user = userDetailsService.loadUserByUsername(username); //Obtengo el objeto
             if(user != null) { //Si ese usuario existe
                 // Creo una representación de la informacion de autenticacion con el username y el listado de credenciales
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+                System.out.print(authentication);
                 // Agrego el usuario al contexto de seguridad actual. Nos va a permitir recuperarlo durante toda la request.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
