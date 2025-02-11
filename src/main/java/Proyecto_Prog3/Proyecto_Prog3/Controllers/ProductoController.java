@@ -1,8 +1,11 @@
 package Proyecto_Prog3.Proyecto_Prog3.Controllers;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 import Proyecto_Prog3.Proyecto_Prog3.Services.ProductoService;
 import Proyecto_Prog3.Proyecto_Prog3.models.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 @RestController
@@ -38,18 +41,40 @@ public class ProductoController {
         return productoService.createProducto(producto);
     }
 
-    @PutMapping(value = "")
+    /*@PutMapping(value = "")
     public Producto updateProducto(@RequestBody Producto producto) {
+        return productoService.updateProducto(producto);
+    }*/
+
+    @PutMapping(value = "/{id}")
+    public Producto updateProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        producto.setIdProducto(id); // Asegurarse que el ID coincida
         return productoService.updateProducto(producto);
     }
 
-    @DeleteMapping(value = "")
+    /*@DeleteMapping(value = "")
     public void deleteProducto(@RequestBody Producto producto) {
+        productoService.deleteProducto(producto);
+    }*/
+
+    @DeleteMapping(value = "/{id}")
+    public void deleteProducto(@PathVariable Long id) {
+        Producto producto = productoService.findProductoById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         productoService.deleteProducto(producto);
     }
 
-    @GetMapping(value = "")
+    /*@GetMapping(value = "")
     public List<Producto> getAllProductos() {
+        return productoService.getAllProductos();
+    }*/
+
+    @GetMapping(value = "")
+    public List<Producto> getAllProductos(HttpServletRequest request) {
+        System.out.println("GET /api/producto - Headers recibidos:");
+        Collections.list(request.getHeaderNames()).forEach(headerName ->
+                System.out.println(headerName + ": " + request.getHeader(headerName))
+        );
         return productoService.getAllProductos();
     }
 

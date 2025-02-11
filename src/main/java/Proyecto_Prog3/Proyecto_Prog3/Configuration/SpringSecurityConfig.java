@@ -30,6 +30,8 @@ public class SpringSecurityConfig {
                 .csrf((csrf) -> csrf.disable()) // Deshabilitar la protección CSRF (Cross-Site Request Forgery), ya que no estamos usando sesiones en el front
                 .authorizeHttpRequests((authorize) -> authorize
 
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir OPTIONS
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll() // Permitir a todos los usuarios loguearse
 
                         .requestMatchers("/api/usuario/**").permitAll() //Permitir a todos crear un usuario
@@ -41,6 +43,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "api/producto/**").hasAuthority("Administrador") //Permite solo a los administradores cargar productos
                         .requestMatchers(HttpMethod.PUT, "api/producto/**").hasAuthority("Administrador") //Permite solo a los administradores cargar productos
                         .requestMatchers(HttpMethod.DELETE, "api/producto/**").hasAuthority("Administrador")
+
                         .requestMatchers(HttpMethod.GET, "api/producto/**").permitAll() // Permitir a todos los usuarios hacer consultas sobre los productos
 
                         .requestMatchers(HttpMethod.POST, "api/tipoEnvio/**").hasAuthority("Administrador") //Permite solo a los administradores cargar un tipo de envio
@@ -63,10 +66,14 @@ public class SpringSecurityConfig {
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Establecer la creación de sesiones en STATELESS, la aplicación no crea sesiones de usuario
                 );
+
+
         // Agregamos un filtro personalizado
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

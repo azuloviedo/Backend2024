@@ -44,7 +44,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioRepository.findByNombreUsuario(nombreUsuario);
     }*/
 
-    @Override
+    /*@Override
     public String authenticate(String username, String password) {
         Usuario user = this.usuarioRepository.findByNombreUsuario(username).orElse(null);
         if (user == null) {
@@ -54,7 +54,24 @@ public class UsuarioServiceImpl implements UsuarioService {
         String token = jwtUtil.generateToken(user.getUsername(), user.getId(), user.getRole());
         System.out.println(token);
         return token;
+    }*/
+    @Override
+    public String authenticate(String username, String password) {
+        // Primero verificamos las credenciales
+        if (!verificarCredenciales(username, password)) {
+            throw new RuntimeException("Credenciales inválidas");
+        }
 
+        // Si las credenciales son válidas, buscamos el usuario
+        Usuario usuario = findByNombreUsuario(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Generamos el token
+        return jwtUtil.generateToken(
+                usuario.getNombreUsuario(),
+                usuario.getId(),
+                usuario.getRole()
+        );
     }
 
     @Override
@@ -147,6 +164,51 @@ public class UsuarioServiceImpl implements UsuarioService {
     public List<Usuario> getAllUsuarios() {
         return (List<Usuario>) usuarioRepository.findAll();
     }
+
+    @Override
+    public boolean verificarCredenciales(String username, String password) {
+        Optional<Usuario> usuarioOpt = findByNombreUsuario(username);
+
+        if (usuarioOpt.isEmpty()) {
+            return false;
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        // Verificar si la contraseña coincide
+        return usuario.getContrasenia().equals(password);
+    }
+
+    @Override
+    public Optional<Usuario> findByNombreUsuario(String username) {
+        return usuarioRepository.findByNombreUsuario(username);
+    }
+
+    @Override
+    public Cliente register(String username, String password, String email, String nombre, String apellido) {
+        // Verificar si el usuario ya existe
+        if (existsByNombreUsuario(username)) {
+            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        }
+
+        // Verificar si el email ya existe
+        if (usuarioRepository.findClientesByMail(email).size() > 0) {
+            throw new IllegalArgumentException("El email ya está registrado");
+        }
+
+        // Crear nuevo cliente
+        Cliente cliente = new Cliente();
+        cliente.setNombreUsuario(username);
+        cliente.setContrasenia(password);
+        cliente.setMail(email);
+        cliente.setNombre(nombre);
+        cliente.setApellido(apellido);
+
+        // Usar el método existente para crear el cliente
+        Cliente clienteCreado = createCliente(cliente);
+
+        return clienteCreado;
+    }
+
 }
 
 

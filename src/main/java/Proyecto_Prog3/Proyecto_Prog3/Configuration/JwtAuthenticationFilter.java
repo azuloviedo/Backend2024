@@ -17,7 +17,54 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
+
 @Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Autowired
+    private JwtUtil jwtUtilities;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        boolean shouldNotFilter = path.startsWith("/api/auth/");
+        System.out.println("Ruta actual: " + path);
+        System.out.println("¿Excluir del filtro JWT?: " + shouldNotFilter);
+        return shouldNotFilter;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("LA REQUEST ES:");
+        System.out.println(request);
+
+        String token = jwtUtilities.getToken(request);
+        System.out.println("Token extraído: " + token);
+        System.out.println("AFUERAAAAAA");
+
+        if (token != null && jwtUtilities.validateToken(token)) {
+            String username = jwtUtilities.extractUsername(token);
+            System.out.println("Username extraído: " + username);
+            System.out.println("ADENTROOO");
+
+            UserDetails user = userDetailsService.loadUserByUsername(username);
+            if (user != null) {
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+                System.out.println("Autenticación creada: " + authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+
+/*@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
     @Autowired
     private JwtUtil jwtUtilities;
@@ -56,4 +103,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         // Invoca el siguiente filtro de la cadena.
         filterChain.doFilter(request, response);
     }
-}
+}*/

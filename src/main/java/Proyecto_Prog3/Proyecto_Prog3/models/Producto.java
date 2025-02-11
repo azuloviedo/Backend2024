@@ -18,7 +18,6 @@ public class Producto {
     private int stock;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 

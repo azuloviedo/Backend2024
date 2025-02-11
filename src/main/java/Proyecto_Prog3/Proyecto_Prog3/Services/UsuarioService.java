@@ -32,4 +32,9 @@ public interface UsuarioService {
     Carrito agregarProductoACarrito(Long clienteId, Long productoId, int cantidad);
     float obtenerTotalCarrito(Long clienteId);
 
+    Cliente register(String username, String password, String email, String nombre, String apellido);
+
+    boolean verificarCredenciales(String username, String password);
+    Optional<Usuario> findByNombreUsuario(String username);
+
 }

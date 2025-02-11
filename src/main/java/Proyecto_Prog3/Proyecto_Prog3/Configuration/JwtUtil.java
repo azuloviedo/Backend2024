@@ -23,7 +23,7 @@ public class JwtUtil {
     private final String secret = "2b44b0b00fd822d8ce753e54dac3dc4e06c2725f7db930f3b9924468b53194dbccdbe23d7baa5ef5fbc414ca4b2e64700bad60c5a7c45eaba56880985582fba4";
     private final Long expiration = 3600l;
 
-    public String generateToken(String username, Long id, String rol) {
+   /* public String generateToken(String username, Long id, String rol) {
         return Jwts.builder()
                 .setSubject(username) // Establece el subject
                 .claim("id", id) // Establece las Claims: información del usuario en el token.
@@ -32,7 +32,19 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Fecha de expiración del token.
                 .signWith(SignatureAlgorithm.HS256, secret) // Firma el token.
                 .compact(); // Crea una cadena JWT con la configuración establecida.
+    }*/
+
+    public String generateToken(String username, Long id, String rol) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("id", id)
+                .claim("rol", rol)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 horas
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
     }
+
 
 
     /*public String generateToken(String username, Long id, String rol) {
